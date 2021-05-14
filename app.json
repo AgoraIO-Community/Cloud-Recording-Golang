@@ -1,41 +1,42 @@
 {
-    "name": "Agora Cloud Recording",
-    "repository": "https://github.com/raysandeep/Agora-Cloud-Recording-Example",
-    "env": {
-        "APP_ID": {
-            "description": "An Agora App ID. Here's how to get your app id: https://docs.agora.io/en/Agora%20Platform/token?platform=All%20Platforms#getappid"
-        },
-        "APP_CERTIFICATE": {
-            "description": "App Certificate is used by Agora to generate tokens for security. Here's how to get your app certificate: https://docs.agora.io/en/Agora%20Platform/token?platform=All%20Platforms#generate-a-token"
-        },
-        "CUSTOMER_ID": {
-            "description": "Required for Cloud Recording. How to get your credentials: https://docs.agora.io/en/faq/restful_authentication",
-            "required": true
-        },
-        "CUSTOMER_CERTIFICATE": {
-            "description": "Required for Cloud Recording. How to get your credentials: https://docs.agora.io/en/faq/restful_authentication",
-            "required": true
-        },
-        "BUCKET_NAME": {
-            "description": "Name of your AWS S3 Bucket. Required for Cloud Recording.",
-            "required": true
-        },
-        "RECORDING_REGION": {
-            "description": "Region of your AWS S3 Bucket. Required for Cloud Recording.",
-            "required": true
-        },
-        "RECORDING_VENDOR": {
-            "description": "Cloud Recording Vendor ID. ",
-            "default": 1,
-            "required": true
-        },
-        "BUCKET_ACCESS_KEY": {
-            "description": "Enter your AWS Access key. Required for Cloud Recording.",
-            "required": true
-        },
-        "BUCKET_ACCESS_SECRET": {
-            "description": "Enter your AWS Access secret. Required for Cloud Recording.",
-            "required": true
-        }
+  "name": "Agora Cloud Recording",
+  "repository": "https://github.com/adictya/Agora-Cloud-Recording-Example",
+  "env": {
+    "APP_ID": {
+      "description": "An Agora App ID. Here's how to get your app id: https://docs.agora.io/en/Agora%20Platform/token?platform=All%20Platforms#getappid"
+    },
+    "APP_CERTIFICATE": {
+      "description": "App Certificate is used by Agora to generate tokens for security. Here's how to get your app certificate: https://docs.agora.io/en/Agora%20Platform/token?platform=All%20Platforms#generate-a-token"
+    },
+    "CUSTOMER_ID": {
+      "description": "Required for Cloud Recording. How to get your credentials: https://docs.agora.io/en/faq/restful_authentication",
+      "required": true
+    },
+    "CUSTOMER_CERTIFICATE": {
+      "description": "Required for Cloud Recording. How to get your credentials: https://docs.agora.io/en/faq/restful_authentication",
+      "required": true
+    },
+    "BUCKET_NAME": {
+      "description": "Name of your AWS S3 Bucket. Required for Cloud Recording.",
+      "required": true
+    },
+    "RECORDING_REGION": {
+      "description": "Region of your AWS S3 Bucket. Required for Cloud Recording.",
+      "required": true
+    },
+    "RECORDING_VENDOR": {
+      "description": "Cloud Recording Vendor ID. ",
+      "default": 1,
+      "required": true
+    },
+    "BUCKET_ACCESS_KEY": {
+      "description": "Enter your AWS Access key. Required for Cloud Recording.",
+      "required": true
+    },
+    "BUCKET_ACCESS_SECRET": {
+      "description": "Enter your AWS Access secret. Required for Cloud Recording.",
+      "required": true
     }
+  }
 }
+

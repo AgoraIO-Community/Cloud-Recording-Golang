@@ -193,12 +193,7 @@ func (c Creds) Retrieve(context.Context) (aws.Credentials,error){
 		},nil
 }
 
-type RecordingParams struct{
-	Delimiter string;
-	Prefix string;
-}
-
-func GetRecordingsList(params *RecordingParams) ([]string, error){
+func GetRecordingsList(channel string) ([]string, error){
 
 	bucket := viper.GetString("BUCKET_NAME")
 
@@ -220,9 +215,9 @@ func GetRecordingsList(params *RecordingParams) ([]string, error){
 
 	objects, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
 		Bucket: &bucket,
-		Delimiter: &params.Delimiter,
-		Prefix: &params.Prefix,
+		Prefix: &channel,
 	})
+
 	if err != nil{
 		return nil,err
 	}

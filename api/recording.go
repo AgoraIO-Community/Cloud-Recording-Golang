@@ -5,10 +5,10 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/raysandeep/Agora-Cloud-Recording-Example/utils"
+	"github.com/adictya/Agora-Cloud-Recording-Example/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/raysandeep/Agora-Cloud-Recording-Example/schemas"
+	"github.com/adictya/Agora-Cloud-Recording-Example/schemas"
 )
 
 func startCall(c *fiber.Ctx) error {
@@ -163,12 +163,7 @@ func createTokens(c *fiber.Ctx) error {
 
 func listRecordings(c* fiber.Ctx) error{
 
-	details := utils.RecordingParams{
-		Delimiter: "/",
-		Prefix: c.Params("channel"),
-	}
-
-	recordings,err := utils.GetRecordingsList(&details)
+	recordings,err := utils.GetRecordingsList(c.Params("channel")+"/")
 	if err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 			"msg": http.StatusInternalServerError,
@@ -186,9 +181,9 @@ func listRecordings(c* fiber.Ctx) error{
 func MountRoutes(app *fiber.App) {
 	app.Post("/api/start/call", startCall)
 	app.Post("/api/stop/call", stopCall)
+	app.Get("/api/list/:channel",listRecordings)
 	app.Get("/api/get/rtc/:channel", createRTCToken)
 	app.Get("/api/get/rtm/:uid", createRTMToken)
-	app.Get("/api/tokens/:channel", createTokens)
-	app.Get("/api/list/:channel",listRecordings)
+	app.Get("/api/tokensy/:channel", createTokens)
 	app.Post("/api/status/call", callStatus)
 }
