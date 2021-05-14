@@ -198,7 +198,9 @@ type RecordingParams struct{
 	Prefix string;
 }
 
-func GetRecordingsList(params *RecordingParams) ([]int, error){
+func GetRecordingsList(params *RecordingParams) ([]string, error){
+
+	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
@@ -217,19 +219,20 @@ func GetRecordingsList(params *RecordingParams) ([]int, error){
 	client:= s3.NewFromConfig(cfg)
 
 	objects, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
-		Bucket: viper.GetString("BUCKET_NAME"),
-		Delimiter: params.Delimiter,
-		Prefix: params.Prefix,
+		Bucket: &bucket,
+		Delimiter: &params.Delimiter,
+		Prefix: &params.Prefix,
 	})
 	if err != nil{
 		return nil,err
 	}
 
-	var recordings []int
+	var recordings []string
 
-	for _,object := range objects.Content{
-		if(object.key[len(object.key)-4:] == "m3u8"){
-			recordings = append(recordings, "https://"+viper.GetString("BUCKET_NAME")+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+object.key )
+	for _,object := range objects.Contents{
+		objectValue := aws.ToString(object.Key)
+		if(objectValue[len(objectValue)-4:] == "m3u8"){
+			recordings = append(recordings, "https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue )
 		}
 	}
 
