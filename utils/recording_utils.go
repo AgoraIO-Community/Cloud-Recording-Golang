@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -230,7 +229,7 @@ func GetRecordingsList(params *RecordingParams) ([]int, error){
 
 	for _,object := range objects.Content{
 		if(object.key[len(object.key)-4:] == "m3u8"){
-			recordings = append(recordings, "https://"+params.Bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+object.key )
+			recordings = append(recordings, "https://"+viper.GetString("BUCKET_NAME")+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+object.key )
 		}
 	}
 
