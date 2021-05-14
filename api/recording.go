@@ -161,6 +161,27 @@ func createTokens(c *fiber.Ctx) error {
 	})
 }
 
+func listRecordings(c* fiber.Ctx) error{
+
+	details := utils.RecordingParams{
+		Delimiter: "/",
+		Prefix: c.Params("channel"),
+	}
+
+	recordings,err := utils.GetRecordingsList(&details)
+	if err != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
+			"msg": http.StatusInternalServerError,
+			"err": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"code": http.StatusOK,
+		"recordings":recordings,
+	})
+}
+
 // MountRoutes mounts all routes declared here
 func MountRoutes(app *fiber.App) {
 	app.Post("/api/start/call", startCall)
@@ -168,5 +189,6 @@ func MountRoutes(app *fiber.App) {
 	app.Get("/api/get/rtc/:channel", createRTCToken)
 	app.Get("/api/get/rtm/:uid", createRTMToken)
 	app.Get("/api/tokens/:channel", createTokens)
+	app.Get("/api/list/:channel",listRecordings)
 	app.Post("/api/status/call", callStatus)
 }

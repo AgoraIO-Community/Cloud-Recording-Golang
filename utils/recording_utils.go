@@ -2,12 +2,17 @@ package utils
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/spf13/viper"
 )
 
@@ -100,10 +105,10 @@ func (rec *Recorder) Start() (string, error) {
 					"streamTypes": 2,
 					"channelType": 1,
 					"transcodingConfig": {
-						"height": 720, 
+						"height": 720,
 						"width": 1280,
-						"bitrate": 2260, 
-						"fps": 15, 
+						"bitrate": 2260,
+						"fps": 15,
 						"mixedVideoLayout": 1,
 						"backgroundColor": "#000000"
 					}
@@ -176,6 +181,60 @@ func Stop(channel string, uid int, rid string, sid string) (string, error) {
 	json.NewDecoder(resp.Body).Decode(&result)
 	b, _ := json.Marshal(result)
 	return string(b), nil
+}
+
+// Listing recordings on s3 bucket
+type Creds struct{}
+
+// TODO: eliminate viper getString overhead by shifting to fetch to initialization
+func (c Creds) Retrieve(context.Context) (aws.Credentials,error){
+	return aws.Credentials{
+			AccessKeyID: viper.GetString("BUCKET_ACCESS_KEY"),
+			SecretAccessKey: viper.GetString("BUCKET_ACCESS_SECRET"),
+		},nil
+}
+
+type RecordingParams struct{
+	Delimiter string;
+	Prefix string;
+}
+
+func GetRecordingsList(params *RecordingParams) ([]int, error){
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		return nil,err
+	}
+
+	var creds aws.CredentialsProvider
+
+	creds = Creds{}
+
+	cfg = aws.Config{
+		Region: viper.GetString("RECORDING_REGION"),
+		Credentials:creds,
+	}
+
+	client:= s3.NewFromConfig(cfg)
+
+	objects, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
+		Bucket: viper.GetString("BUCKET_NAME"),
+		Delimiter: params.Delimiter,
+		Prefix: params.Prefix,
+	})
+	if err != nil{
+		return nil,err
+	}
+
+	var recordings []int
+
+	for _,object := range objects.Content{
+		if(object.key[len(object.key)-4:] == "m3u8"){
+			recordings = append(recordings, "https://"+params.Bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+object.key )
+		}
+	}
+
+	return recordings,nil
 }
 
 func CallStatus(rid string, sid string) (StatusStruct, error) {
