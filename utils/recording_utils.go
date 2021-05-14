@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -24,6 +25,8 @@ type Recorder struct {
 	RID     string
 	SID     string
 }
+
+
 
 type StatusStruct struct {
 	Resourceid     string `json:"resourceId"`
@@ -195,6 +198,27 @@ func (c Creds) Retrieve(context.Context) (aws.Credentials,error){
 
 func GetRecordingsList(channel string) ([]string, error){
 
+Regions := map[int]string{
+0: "US_EAST_1",
+1: "US_EAST_2",
+2: "US_WEST_1",
+3: "US_WEST_2",
+4: "EU_WEST_1",
+5: "EU_WEST_2",
+6: "EU_WEST_3",
+7: "EU_CENTRAL_1",
+8: "AP_SOUTHEAST_1",
+9: "AP_SOUTHEAST_2",
+10: "AP_NORTHEAST_1",
+11: "AP_NORTHEAST_2",
+12: "SA_EAST_1",
+13: "CA_CENTRAL_1",
+14: "AP_SOUTH_1",
+15: "CN_NORTH_1",
+16: "CN_NORTHWEST_1",
+17: "US_GOV_WEST_1",
+}
+
 	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
@@ -207,9 +231,11 @@ func GetRecordingsList(channel string) ([]string, error){
 	creds = Creds{}
 
 	cfg = aws.Config{
-		Region: viper.GetString("RECORDING_REGION"),
+		Region: Regions[viper.GetInt("RECORDING_REGION")],
 		Credentials:creds,
 	}
+
+	log.Println(Regions[viper.GetInt("RECORDING_REGION")])
 
 	client:= s3.NewFromConfig(cfg)
 
