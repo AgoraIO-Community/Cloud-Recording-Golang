@@ -1,5 +1,6 @@
-module github.com/raysandeep/Agora-Cloud-Recording-Example
+module github.com/adictya/Agora-Cloud-Recording-Example
 
+// +heroku goVersion go1.15
 go 1.15
 
 require (
@@ -10,6 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.7.0
 	github.com/gofiber/fiber/v2 v2.9.0
 	github.com/klauspost/compress v1.12.2 // indirect
+	github.com/raysandeep/Agora-Cloud-Recording-Example v0.0.0-20210406201207-36a106d5eb00
 	github.com/spf13/viper v1.7.1
 	github.com/valyala/fasthttp v1.24.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
