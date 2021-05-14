@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/raysandeep/Agora-Cloud-Recording-Example/schemas"
+	"github.com/adictya/Agora-Cloud-Recording-Example/schemas"
 	"github.com/spf13/viper"
 	"math/rand"
 	"time"

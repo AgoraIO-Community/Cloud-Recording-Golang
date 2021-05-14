@@ -1,12 +1,12 @@
 {
-    "APP_ID": "",
-    "APP_CERTIFICATE": "",
-    "RECORDING_VENDOR": "",
-    "RECORDING_REGION": "",
-    "BUCKET_NAME": "",
-    "BUCKET_ACCESS_KEY": "",
-    "BUCKET_ACCESS_SECRET": "",
-    "CUSTOMER_ID": "",
-    "CUSTOMER_CERTIFICATE": "",
-    "PORT": 3000
+  "APP_ID": "",
+  "APP_CERTIFICATE": "",
+  "RECORDING_VENDOR": "",
+  "RECORDING_REGION": "",
+  "BUCKET_NAME": "",
+  "BUCKET_ACCESS_KEY": "",
+  "BUCKET_ACCESS_SECRET": "",
+  "CUSTOMER_ID": "",
+  "CUSTOMER_CERTIFICATE": "",
+  "PORT": 3000
 }
