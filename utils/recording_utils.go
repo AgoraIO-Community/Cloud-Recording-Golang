@@ -5,16 +5,38 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/spf13/viper"
 )
+
+var Regions = map[int]string{
+	0:  "us-east-1",
+	1:  "us-east-2",
+	2:  "us-west-1",
+	3:  "us-west-2",
+	4:  "eu-west-1",
+	5:  "eu-west-2",
+	6:  "eu-west-3",
+	7:  "eu-central-1",
+	8:  "ap-southeast-1",
+	9:  "ap-southeast-2",
+	10: "ap-northeast-1",
+	11: "ap-northeast-2",
+	12: "sa-east-1",
+	13: "ca-central-1",
+	14: "ap-south-1",
+	15: "cn-north-1",
+	16: "cn-northwest-1",
+	17: "us-gov-west-1",
+}
+
 
 // Recorder manages cloud recording
 type Recorder struct {
@@ -25,8 +47,6 @@ type Recorder struct {
 	RID     string
 	SID     string
 }
-
-
 
 type StatusStruct struct {
 	Resourceid     string `json:"resourceId"`
@@ -189,41 +209,20 @@ func Stop(channel string, uid int, rid string, sid string) (string, error) {
 type Creds struct{}
 
 // TODO: eliminate viper getString overhead by shifting to fetch to initialization
-func (c Creds) Retrieve(context.Context) (aws.Credentials,error){
+func (c Creds) Retrieve(context.Context) (aws.Credentials, error) {
 	return aws.Credentials{
-			AccessKeyID: viper.GetString("BUCKET_ACCESS_KEY"),
-			SecretAccessKey: viper.GetString("BUCKET_ACCESS_SECRET"),
-		},nil
+		AccessKeyID:     viper.GetString("BUCKET_ACCESS_KEY"),
+		SecretAccessKey: viper.GetString("BUCKET_ACCESS_SECRET"),
+	}, nil
 }
 
-func GetRecordingsList(channel string) ([]string, error){
-
-Regions := map[int]string{
-0: "us-east-1",
-1: "us-east-2",
-2: "us-west-1",
-3: "us-west-2",
-4: "eu-west-1",
-5: "eu-west-2",
-6: "eu-west-3",
-7: "eu-central-1",
-8: "ap-southeast-1",
-9: "ap-southeast-2",
-10: "ap-northeast-1",
-11: "ap-northeast-2",
-12: "sa-east-1",
-13: "ca-central-1",
-14: "ap-south-1",
-15: "cn-north-1",
-16: "cn-northwest-1",
-17: "us-gov-west-1",
-}
+func GetRecordingsList(channel string) ([]string, error) {
 
 	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	var creds aws.CredentialsProvider
@@ -231,33 +230,75 @@ Regions := map[int]string{
 	creds = Creds{}
 
 	cfg = aws.Config{
-		Region: Regions[viper.GetInt("RECORDING_REGION")],
-		Credentials:creds,
+		Region:      Regions[viper.GetInt("RECORDING_REGION")],
+		Credentials: creds,
 	}
 
-	log.Println(Regions[viper.GetInt("RECORDING_REGION")])
-
-	client:= s3.NewFromConfig(cfg)
+	client := s3.NewFromConfig(cfg)
 
 	objects, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
 		Bucket: &bucket,
 		Prefix: &channel,
 	})
 
-	if err != nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 
 	var recordings []string
 
-	for _,object := range objects.Contents{
+	for _, object := range objects.Contents {
 		objectValue := aws.ToString(object.Key)
-		if(objectValue[len(objectValue)-4:] == "m3u8"){
-			recordings = append(recordings, "https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue )
+		if objectValue[len(objectValue)-4:] == "m3u8" {
+			recordings = append(recordings, "https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue)
 		}
 	}
 
-	return recordings,nil
+	return recordings, nil
+}
+
+type S3PresignGetObjectAPI interface {
+	PresignGetObject(
+		ctx context.Context,
+		params *s3.GetObjectInput,
+		optFns ...func(*s3.PresignOptions),
+	)(*v4.PresignedHTTPRequest, error)
+}
+
+func GetPresignedURL(c context.Context, api S3PresignGetObjectAPI, input *s3.GetObjectInput) (*v4.PresignedHTTPRequest, error) {
+	return api.PresignGetObject(c, input)
+}
+
+func GetRecording(object string) (string,error){
+	// bucket := viper.GetString("BUCKET_NAME")
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		return "", err
+	}
+
+	var creds aws.CredentialsProvider
+
+	creds = Creds{}
+
+	cfg = aws.Config{
+		Region:      Regions[viper.GetInt("RECORDING_REGION")],
+		Credentials: creds,
+	}
+
+	client := s3.NewFromConfig(cfg)
+
+	psClient := s3.NewPresignClient(client)
+
+	resp, err := GetPresignedURL(context.TODO(), psClient, &s3.GetObjectInput{
+		Bucket: aws.String("protected-rec"),
+		Key:    aws.String("test/10baafb7374bc5c42fdc9b8081ca450e_test_20210409173637488.ts"),
+	})
+	if err != nil {
+		return "",err
+	}
+
+	return resp.URL,nil
 }
 
 func CallStatus(rid string, sid string) (StatusStruct, error) {
