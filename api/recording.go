@@ -177,7 +177,7 @@ func listRecordings(c* fiber.Ctx) error{
 }
 
 func getProtectedRecordingUrl(c* fiber.Ctx) error{
-	recordingUrl,err := utils.GetRecording(c.Params("key"))
+	recordingUrl,err := utils.GetRecording(c.Params("+"))
 	if err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 			"msg": http.StatusInternalServerError,
@@ -196,7 +196,7 @@ func MountRoutes(app *fiber.App) {
 	app.Post("/api/start/call", startCall)
 	app.Post("/api/stop/call", stopCall)
 	app.Get("/api/get/recordings/:channel",listRecordings)
-	app.Get("/api/get/recording/:object",getProtectedRecordingUrl)
+	app.Get("/api/get/recording/+",getProtectedRecordingUrl)
 	app.Get("/api/get/rtc/:channel", createRTCToken)
 	app.Get("/api/get/rtm/:uid", createRTMToken)
 	app.Get("/api/tokens/:channel", createTokens)

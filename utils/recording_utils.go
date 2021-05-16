@@ -250,7 +250,7 @@ func GetRecordingsList(channel string) ([]string, error) {
 	for _, object := range objects.Contents {
 		objectValue := aws.ToString(object.Key)
 		if objectValue[len(objectValue)-4:] == "m3u8" {
-			recordings = append(recordings, "https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue)
+			recordings = append(recordings,objectValue)
 		}
 	}
 
@@ -263,14 +263,14 @@ type S3PresignGetObjectAPI interface {
 		params *s3.GetObjectInput,
 		optFns ...func(*s3.PresignOptions),
 	)(*v4.PresignedHTTPRequest, error)
-}
 
+}
 func GetPresignedURL(c context.Context, api S3PresignGetObjectAPI, input *s3.GetObjectInput) (*v4.PresignedHTTPRequest, error) {
 	return api.PresignGetObject(c, input)
 }
 
 func GetRecording(object string) (string,error){
-	// bucket := viper.GetString("BUCKET_NAME")
+	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
@@ -291,8 +291,8 @@ func GetRecording(object string) (string,error){
 	psClient := s3.NewPresignClient(client)
 
 	resp, err := GetPresignedURL(context.TODO(), psClient, &s3.GetObjectInput{
-		Bucket: aws.String("protected-rec"),
-		Key:    aws.String("test/10baafb7374bc5c42fdc9b8081ca450e_test_20210409173637488.ts"),
+		Bucket: aws.String(bucket),
+		Key:    aws.String(object),
 	})
 	if err != nil {
 		return "",err
