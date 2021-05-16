@@ -216,6 +216,47 @@ func (c Creds) Retrieve(context.Context) (aws.Credentials, error) {
 	}, nil
 }
 
+func GetRecordingsURLs(channel string) ([]string, error) {
+
+	bucket := viper.GetString("BUCKET_NAME")
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+
+	var creds aws.CredentialsProvider
+
+	creds = Creds{}
+
+	cfg = aws.Config{
+		Region:      Regions[viper.GetInt("RECORDING_REGION")],
+		Credentials: creds,
+	}
+
+	client := s3.NewFromConfig(cfg)
+
+	objects, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
+		Bucket: &bucket,
+		Prefix: &channel,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var recordings []string
+
+	for _, object := range objects.Contents {
+		objectValue := aws.ToString(object.Key)
+		if objectValue[len(objectValue)-4:] == "m3u8" {
+			recordings = append(recordings,"https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue)
+		}
+	}
+
+	return recordings, nil
+}
+
 func GetRecordingsList(channel string) ([]string, error) {
 
 	bucket := viper.GetString("BUCKET_NAME")
@@ -269,7 +310,7 @@ func GetPresignedURL(c context.Context, api S3PresignGetObjectAPI, input *s3.Get
 	return api.PresignGetObject(c, input)
 }
 
-func GetRecording(object string) (string,error){
+func GetRecordings(object string) (string,error){
 	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
