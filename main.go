@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/AgoraIO-Community/Cloud-Recording-Golang/api"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/adictya/Agora-Cloud-Recording-Example/api"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -32,6 +32,5 @@ func main() {
 	api.MountRoutes(app)
 
 	app.Listen(":" + viper.GetString("PORT"))
-
 
 }

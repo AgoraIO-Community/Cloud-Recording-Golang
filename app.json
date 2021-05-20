@@ -1,6 +1,6 @@
 {
   "name": "Agora Cloud Recording",
-  "repository": "https://github.com/adictya/Agora-Cloud-Recording-Example",
+  "repository": "https://github.com/AgoraIO-Community/Cloud-Recording-Golang",
   "env": {
     "APP_ID": {
       "description": "An Agora App ID. Here's how to get your app id: https://docs.agora.io/en/Agora%20Platform/token?platform=All%20Platforms#getappid"

@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/spf13/viper"
@@ -36,7 +36,6 @@ var Regions = map[int]string{
 	16: "cn-northwest-1",
 	17: "us-gov-west-1",
 }
-
 
 // Recorder manages cloud recording
 type Recorder struct {
@@ -250,7 +249,7 @@ func GetRecordingsURLs(channel string) ([]string, error) {
 	for _, object := range objects.Contents {
 		objectValue := aws.ToString(object.Key)
 		if objectValue[len(objectValue)-4:] == "m3u8" {
-			recordings = append(recordings,"https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue)
+			recordings = append(recordings, "https://"+bucket+".s3."+viper.GetString("RECORDING_REGION")+".amazonaws.com/"+objectValue)
 		}
 	}
 
@@ -291,7 +290,7 @@ func GetRecordingsList(channel string) ([]string, error) {
 	for _, object := range objects.Contents {
 		objectValue := aws.ToString(object.Key)
 		if objectValue[len(objectValue)-4:] == "m3u8" {
-			recordings = append(recordings,objectValue)
+			recordings = append(recordings, objectValue)
 		}
 	}
 
@@ -303,14 +302,14 @@ type S3PresignGetObjectAPI interface {
 		ctx context.Context,
 		params *s3.GetObjectInput,
 		optFns ...func(*s3.PresignOptions),
-	)(*v4.PresignedHTTPRequest, error)
-
+	) (*v4.PresignedHTTPRequest, error)
 }
+
 func GetPresignedURL(c context.Context, api S3PresignGetObjectAPI, input *s3.GetObjectInput) (*v4.PresignedHTTPRequest, error) {
 	return api.PresignGetObject(c, input)
 }
 
-func GetRecordings(object string) (string,error){
+func GetRecordings(object string) (string, error) {
 	bucket := viper.GetString("BUCKET_NAME")
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
@@ -336,10 +335,10 @@ func GetRecordings(object string) (string,error){
 		Key:    aws.String(object),
 	})
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
-	return resp.URL,nil
+	return resp.URL, nil
 }
 
 func CallStatus(rid string, sid string) (StatusStruct, error) {

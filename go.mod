@@ -1,4 +1,4 @@
-module github.com/adictya/Agora-Cloud-Recording-Example
+module github.com/AgoraIO-Community/Cloud-Recording-Golang
 
 // +heroku goVersion go1.15
 go 1.15

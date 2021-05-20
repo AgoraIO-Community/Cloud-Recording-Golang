@@ -1,13 +1,11 @@
-# Agora-Cloud-Recording-Example
+# Agora Cloud Recording Backend Service
 
 ## Features
 * RTC and RTM tokens
 * Cloud Recording
-* Fetch recordings URLs for given Channel Name
+* Fetch Recordings URLs for given Channel Name
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2FEkaanshArora%2FAgora-Cloud-Recording-Example%2Ftree%2Fmaster)
-
-This backend is used for this React Native [app](https://github.com/EkaanshArora/Agora-RN-Record-Playback).
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/AgoraIO-Community/Cloud-Recording-Golang/tree/master)
 
 ## Routes
 Start call recording

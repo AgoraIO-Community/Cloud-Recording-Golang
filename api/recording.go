@@ -5,10 +5,9 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/adictya/Agora-Cloud-Recording-Example/utils"
-
+	"github.com/AgoraIO-Community/Cloud-Recording-Golang/schemas"
+	"github.com/AgoraIO-Community/Cloud-Recording-Golang/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/adictya/Agora-Cloud-Recording-Example/schemas"
 )
 
 func startCall(c *fiber.Ctx) error {
@@ -161,8 +160,8 @@ func createTokens(c *fiber.Ctx) error {
 	})
 }
 
-func listRecordings(c* fiber.Ctx) error{
-	recordings,err := utils.GetRecordingsList(c.Params("channel")+"/")
+func listRecordings(c *fiber.Ctx) error {
+	recordings, err := utils.GetRecordingsList(c.Params("channel") + "/")
 	if err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 			"msg": http.StatusInternalServerError,
@@ -171,13 +170,13 @@ func listRecordings(c* fiber.Ctx) error{
 	}
 
 	return c.JSON(fiber.Map{
-		"code": http.StatusOK,
-		"recording_urls":recordings,
+		"code":           http.StatusOK,
+		"recording_urls": recordings,
 	})
 }
 
-func listRecordingsURLs(c* fiber.Ctx) error{
-	recordings,err := utils.GetRecordingsURLs(c.Params("channel")+"/")
+func listRecordingsURLs(c *fiber.Ctx) error {
+	recordings, err := utils.GetRecordingsURLs(c.Params("channel") + "/")
 	if err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 			"msg": http.StatusInternalServerError,
@@ -186,13 +185,13 @@ func listRecordingsURLs(c* fiber.Ctx) error{
 	}
 
 	return c.JSON(fiber.Map{
-		"code": http.StatusOK,
-		"recordings":recordings,
+		"code":       http.StatusOK,
+		"recordings": recordings,
 	})
 }
 
-func getProtectedRecordingUrl(c* fiber.Ctx) error{
-	recordingUrl,err := utils.GetRecordings(c.Params("+"))
+func getProtectedRecordingUrl(c *fiber.Ctx) error {
+	recordingUrl, err := utils.GetRecordings(c.Params("+"))
 	if err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 			"msg": http.StatusInternalServerError,
@@ -201,8 +200,8 @@ func getProtectedRecordingUrl(c* fiber.Ctx) error{
 	}
 
 	return c.JSON(fiber.Map{
-		"code": http.StatusOK,
-		"recording_url":recordingUrl,
+		"code":          http.StatusOK,
+		"recording_url": recordingUrl,
 	})
 }
 
@@ -210,9 +209,9 @@ func getProtectedRecordingUrl(c* fiber.Ctx) error{
 func MountRoutes(app *fiber.App) {
 	app.Post("/api/start/call", startCall)
 	app.Post("/api/stop/call", stopCall)
-	app.Get("/api/get/list/:channel",listRecordings)
-	app.Get("/api/get/file/+",listRecordings)
-	app.Get("/api/get/recordingUrls/:channel",listRecordingsURLs)
+	app.Get("/api/get/list/:channel", listRecordings)
+	app.Get("/api/get/file/+", listRecordings)
+	app.Get("/api/get/recordingUrls/:channel", listRecordingsURLs)
 	app.Get("/api/get/rtc/:channel", createRTCToken)
 	app.Get("/api/get/rtm/:uid", createRTMToken)
 	app.Get("/api/tokens/:channel", createTokens)

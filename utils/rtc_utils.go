@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+
 	accesstoken "github.com/AgoraIO/Tools/DynamicKey/AgoraDynamicKey/go/src/AccessToken"
 )
 

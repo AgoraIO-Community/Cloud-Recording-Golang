@@ -1,13 +1,12 @@
 package utils
 
 import (
-	"github.com/adictya/Agora-Cloud-Recording-Example/schemas"
-	"github.com/spf13/viper"
 	"math/rand"
 	"time"
+
+	"github.com/AgoraIO-Community/Cloud-Recording-Golang/schemas"
+	"github.com/spf13/viper"
 )
-
-
 
 // GetRtcToken generates token for Agora RTC SDK
 func GetRtcToken(channel string, uid int) (string, error) {
