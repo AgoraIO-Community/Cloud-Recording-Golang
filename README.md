@@ -5,7 +5,7 @@
 * Cloud Recording
 * Fetch Recordings URLs for given Channel Name
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/AgoraIO-Community/Cloud-Recording-Golang/tree/master)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/AgoraIO-Community/Cloud-Recording-Golang/tree/main)
 
 ## Routes
 Start call recording
