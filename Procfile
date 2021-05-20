@@ -1,1 +1,1 @@
-web: bin/Agora-Cloud-Recording-Example
+web: bin/Cloud-Recording-Golang
