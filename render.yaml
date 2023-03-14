@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: Agora Token Server
+    name: Agora Cloud Recording Service
     env: docker
-    repo: https://github.com/AgoraIO-Community/agora-token-service.git
+    repo: https://github.com/AgoraIO-Community/Cloud-Recording-Golang.git
     rootDir: .
     plan: free
     envVars:
