@@ -5,9 +5,6 @@
 * Cloud Recording
 * Fetch Recordings URLs for given Channel Name
 
-<a href="https://render.com/deploy?repo=https://github.com/AgoraIO-Community/Cloud-Recording-Golang">
-  <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
-</a>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/AgoraIO-Community/Cloud-Recording-Golang/tree/main)
 
