@@ -24,3 +24,5 @@ services:
         sync: false
       - key: RECORDING_VENDOR
         sync: false
+      - key: PORT
+        sync: false
